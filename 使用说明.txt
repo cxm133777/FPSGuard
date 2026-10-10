@@ -132,3 +132,135 @@ UI 验证入口示例：
 源码随包提供，便于审查、学习与自行编译；二次发布或商业使用的授权由发布者决定。本包未附加第三方开源许可，也不冒称 OpenAI 官方授权或性能认证。
 
 参考：[微软 DPI 变化处理](https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged)、[微软工作集说明](https://learn.microsoft.com/en-us/windows/win32/memory/working-set)。
+
+
+# FPS Guard 3.1.0
+
+A lightweight background utility for Windows gaming. Designed, written, and debugged with the assistance of **OpenAI Codex (an AI programming assistant)**, and iterated based on the developer's own gaming needs. This is not an official OpenAI product.
+
+## Quick Start
+
+1. Extract the entire release package; do not run the program directly from within the archive software.
+2. Double-click `安装.cmd` (Install.cmd): This installs the program to the current user's directory, creates a desktop shortcut, and enables startup on login—no administrator privileges required.
+3. Double-click the "FPS Guard" icon on your desktop to open the control panel. The program continues to run in the background after the window is closed.
+4. Right-click the system tray icon to clean up, pause, or select "Exit and Restore Adjustments."
+
+You can also double-click `启动.cmd` (Start.cmd) or `bin\FpsGuard.exe` to try it out immediately. Running it directly does not automatically create a startup entry; if you manually enable startup on login, ensure the program files remain in their original location. Using the installer method is recommended.
+
+Installing updates preserves existing settings. Startup on login is enabled by default via the installation script but can be disabled on the Overview page. There is no need to disable antivirus software, firewalls, or anti-cheat systems.
+
+## System and Display
+
+- Compatible with x64 versions of Windows 10 (22H2) and Windows 11; requires .NET Framework 4.8. 32-bit systems are not supported.
+- Version 3.1.0 fixes issues with overlapping titles, clipped numbers, and synchronization errors between fonts and layout at high DPI settings. Layout, fonts, list column widths, and custom-drawn elements scale together.
+- Supports per-monitor DPI changes; the interface rearranges itself when moved between screens with different scaling settings.
+- Optimized primarily for 2560×1440 resolution at 150% scaling; layout simulations have been verified for 100%, 125%, 150%, and 200% scaling, though real-world testing on actual hardware is still recommended.
+- Scrollbars appear when workspace is limited to maintain text readability; scroll down to access the buttons at the bottom. - Reads Windows light/dark mode settings; reopen the panel after changing the system theme to update the UI.
+- Drag the top empty area to move the window; press Esc to collapse; use Ctrl + 1–7 to switch pages. Click the red dot to close the panel, the yellow dot to minimize, and the green dot to collapse to the system tray.
+
+## Features
+
+### Reduce Background Resource Contention During Gaming
+
+Once a game is detected, the priority of listed background applications is temporarily lowered from "Normal" to "Below Normal." The default list includes web browsers, Steam web helper processes, NetEase Cloud Music, and Wallpaper Engine; Code (VS Code) and OneDrive can be toggled individually. Foreground applications and those on the protection list are excluded; priorities are restored when switching back to the app, ending the game, pausing, or exiting normally.
+
+This feature affects CPU scheduling priority; it does not limit download speeds, network usage, GPU/disk activity, or automatically close applications. There is an optional setting to *increase* the priority of CS2, CS:GO, or SCP:SL (disabled by default); Valorant is recognized for protection purposes only and its priority is not modified. Other games are generally only included for detection and protection purposes.
+
+### Idle Memory Optimization
+
+By default, this only cleans up listed browsers and Steam web helper processes that are hidden or minimized. Automatic cleanup triggers only when memory pressure sustains a specific threshold and the user is idle.
+
+**Both automatic and manual cleanup are disabled while a game is running.** Automatic cleanup resumes 2 minutes after the game ends. Manual cleanup has a 30-second cooldown.
+
+A reduction in the "working set" indicates fewer resident physical memory pages; it does not mean the application has released all allocated memory. Pages may be reloaded when the program accesses them again; more frequent cleanup does not necessarily result in higher frame rates.
+
+### Game Detection
+
+- Built-in support for common process names, including CS2, Valorant, SCP:SL, Apex Legends, PUBG, Rainbow Six Siege, Overwatch, Fortnite, etc.
+- Detects installed game directories from the Steam library while excluding certain launchers and utility software. Directory detection relies on heuristic rules and may still result in false positives.
+- Supports adding specific game folders from other platforms (one per line); do not select entire drives or common program directories.
+- Supports adding custom game process names and manually enabling "Game Guard" mode. - Manual protection must be manually stopped after use; the session is not preserved upon exiting the program.
+
+The Steam list cache updates approximately every 5 minutes. Restart the tool to refresh the list after installing new games; for unrecognized games, manually add the process name or directory first.
+
+### List and Application Management
+
+Enter process names in the lists, separated by commas (the `.exe` extension is optional). Click "Save" after modifying each line.
+
+| List | Purpose |
+|---|---|
+| Extra Games | Game identification and cleanup protection |
+| Extra Cleanup Apps | Apps explicitly allowed to have their working sets trimmed |
+| Background List | Apps whose priority is temporarily lowered during gaming |
+| Protection List | Excluded from this tool's cleanup and priority adjustments |
+
+The Protection List takes precedence; critical system processes, common voice chat, screen recording, and anti-cheat components are protected by default. You can manually add any voice, peripheral, or recording programs not covered by default to the Protection List.
+
+The Application Management page allows you to view resource usage, add apps to lists, clean selected processes, or request a graceful shutdown. The shutdown function does not force-terminate processes; please save your work first. Shutdown operations are disabled during gameplay.
+
+### Dynamic Wallpapers and System Shortcuts
+
+Optional feature to stop Wallpaper Engine during gameplay and resume playback afterward (disabled by default). Note that the resume command cannot restore a manual pause state that existed before the game started; please keep this in mind before enabling.
+
+The Utilities page provides shortcuts for Game Mode, background recording, auto-start applications, and Task Manager, allowing you to configure them as needed.
+
+### Frame Time CSV Analysis
+
+Supports importing CSV files for single processes or swapchains; compatible with millisecond columns named `MsBetweenPresents`, `FrameTime`, `FrameTimeMs`, or `FrameTime (ms)`.
+
+- Average FPS = 1000 / Average Frame Time.
+- Tool's 1% Low = 1000 / Average of the slowest 1% of frame times.
+- Displays P99, P99.9, and slow frame counts; definitions may vary across analysis tools, so ensure consistency when comparing data.
+- Requires at least 100 valid frames; maximum file size is 64MB. Does not automatically exclude frames from menus, loading screens, or scene transitions.
+- Does not continuously capture frame times or inject code into the game; requires a separate export of sampled CSV data.
+
+## Default Cleanup Parameters
+
+| Parameter | Default Value | Range |
+|---|---:|---:|
+| Memory Usage Threshold | 80% | 60–95% |
+| Cleanup Interval | 5 minutes | 2–60 minutes |
+| Minimum Idle Time | 45 seconds | 15–600 seconds |
+| Max Processes per Cycle | 12 | 1–60 |
+| Minimum Target Working Set | 64MB | 16–1024MB |
+| Detection Interval | 5 seconds | 3–30 seconds |
+
+Automatic cleanup triggers only when the pressure threshold is met across three consecutive checks. Parameters are adjustable, though using the default settings initially is recommended.
+
+## Effects and Scope
+
+The goal is to reduce controllable background interference; **no guarantee of increased FPS or improved "1% low" frame rates.** Results vary by PC, game, and scenario; extensive compatibility testing with specific game sessions and anti-cheat systems has not been performed.
+
+It is recommended to compare frame time data using identical game scenarios, graphics settings, frame rate limits, and sampling intervals. Memory cleanup figures or subjective smoothness should not be treated as rigorous performance benchmarks.
+
+Runs entirely locally; no ads, accounts, automatic online updates, drivers, or system services. **Does not switch power plans, disable Defender/firewalls, alter Windows services, or modify game files.** System optimizations applied to the developer's own PC are not included in this software or release package.
+
+## Exit, Restore, and Uninstall
+
+Prefer using the "Exit and Restore Adjustments" option from the system tray. The program attempts to restore process priorities upon pausing, game conclusion, or normal exit; PIDs and start times are recorded prior to modification. If you manually change a priority later, the new value is retained.
+
+After an abnormal termination, the program attempts restoration upon the next launch. The uninstaller will halt if it detects pending restoration records; please launch the program, pause/exit properly, and then uninstall. Double-click `卸载.cmd` (Uninstall.cmd) or uninstall via Windows "Installed apps." Settings and logs are retained in `%LOCALAPPDATA%\FpsGuard\`. Uninstallation does not remove the downloaded source code folder.
+
+This package is not digitally signed. If you encounter security warnings, please verify the download source against `SHA256SUMS.txt` or review the source code and compile it yourself; you do not need to disable system protection to run it.
+
+## Source Code and Compilation
+
+Source code is located in the `src` directory. The build process does not rely on NuGet, Node.js, or external downloads; it uses the system's built-in C# compiler:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
+```
+
+This generates `bin\FpsGuard.exe` and runs checks for policies and native interfaces. Please exit any running instances of the program before building to avoid file access conflicts.
+
+Example of launching the UI verification mode:
+
+```powershell
+.\bin\FpsGuard.exe --ui-test --dark --dpi 144
+```
+
+This generates a simulated screenshot for 150% display scaling. `--ui-test-live` uses actual screen captures and should only be used when the window is fully visible; simulated scaling cannot replace real-world testing on the target machine.
+
+Source code is included to facilitate review, learning, and self-compilation; licensing for redistribution or commercial use is determined by the publisher. This package does not include a third-party open-source license, nor does it claim official authorization or performance certification from OpenAI.
+
+References: [Microsoft DPI change handling](https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged), [Microsoft Working Set explanation](https://learn.microsoft.com/en-us/windows/win32/memory/working-set).

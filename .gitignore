@@ -1,0 +1,14 @@
+# Local settings and diagnostic output
+settings.xml
+recovery.xml
+activity.log*
+probe.txt
+ui-*.png
+live-*.png
+*.zip
+*.pdb
+bin/FpsGuard.Tests.exe
+.vs/
+.vscode/
+tools/
+gh-path.txt

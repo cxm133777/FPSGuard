@@ -1,3 +1,5 @@
+﻿> **完整安装包下载：[v3.1.0 Release](https://github.com/cxm133777/FPSGuard/releases/latest)**。下载 `FPS轻守-3.1.0-发布包.zip`，完整解压后双击 `安装.cmd`。源码已整理至 `src/`，可在仓库根目录运行 `build.ps1`。
+
 # FPS 轻守 3.1.0
 
 轻量 Windows 游戏后台工具。由 **OpenAI Codex（AI 编程助手）协助设计、编写和调试**，根据发布者的游戏使用需求迭代。不是 OpenAI 官方产品。
