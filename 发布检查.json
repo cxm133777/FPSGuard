@@ -1,0 +1,24 @@
+﻿{
+    "Version":  "3.1.0",
+    "PolicyAndNativeChecks":  88,
+    "DpiLayoutSimulation":  [
+                                96,
+                                120,
+                                144,
+                                192
+                            ],
+    "Themes":  [
+                   "dark",
+                   "light"
+               ],
+    "PagesPerScenario":  7,
+    "SmallWorkAreaSimulation":  "1920x1032 at 144 DPI; footer scrolling checked",
+    "DpiChangeMessages":  "96 -\u003e 144 -\u003e 192 -\u003e 120 -\u003e 96",
+    "LiveScreenshots":  "96 DPI, dark and light",
+    "Target2560x1440At150Percent":  "Layout simulation passed; target-machine validation still required",
+    "ActualGame1PercentLowBenchmark":  "Not performed",
+    "AI":  "OpenAI Codex",
+    "SourceIncluded":  true,
+    "PersonalSettingsIncluded":  false,
+    "WindowsDebloatScriptsIncluded":  false
+}
