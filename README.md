@@ -1,4 +1,4 @@
-﻿> **完整安装包下载：[v3.1.0 Release](https://github.com/cxm133777/FPSGuard/releases/latest)**。下载 `FPS轻守-3.1.0-发布包.zip`，完整解压后双击 `安装.cmd`。源码已整理至 `src/`，可在仓库根目录运行 `build.ps1`。
+﻿> **完整安装包下载：[v3.1.0 Release](https://github.com/cxm133777/FPSGuard/releases/latest)**。下载 `FpsGuard-3.1.0-win-x64.zip`，完整解压后双击 `安装.cmd`。源码已整理至 `src/`，可在仓库根目录运行 `build.ps1`。
 
 # FPS 轻守 3.1.0
 
